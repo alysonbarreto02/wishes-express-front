@@ -10,7 +10,8 @@ const config: Config = {
     colors: {
       "red-system": "#C51605",
       "yellow-system": "#FD8D14",
-      "gray-system": "#B0B0B0"
+      "gray-system": "#B0B0B0",
+      "dark-gray-system": "#727272"
     },
     extend: {
       backgroundImage: {

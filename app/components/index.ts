@@ -1,4 +1,6 @@
-import { Input } from "@/components/Input"
+import { DefaultInput } from "@/components/DefaultInput"
 import { Tabs } from "@/components/Tabs"
+import { OutlineButton } from "@/components/OutlineButton"
+import { DefaultButton } from "@/components/DefaultButton"
 
-export { Input, Tabs }
+export { DefaultInput, Tabs, OutlineButton, DefaultButton }
