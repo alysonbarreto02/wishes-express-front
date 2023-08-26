@@ -1,14 +1,17 @@
 export function OutlineButton({
   title,
   onClick,
-  color = "gray"
+  color = "gray",
+  type = "button"
 }: {
   title: string
-  onClick: () => void
+  onClick?: () => void
   color?: "gray" | "yellow"
+  type?: "button" | "submit" | "reset"
 }) {
   return (
     <button
+      type={type}
       className={`border rounded-md ${
         color === "gray" ? "border-gray-system" : "border-yellow-system"
       } h-9 w-full`}
