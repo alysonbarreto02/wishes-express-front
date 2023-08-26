@@ -9,6 +9,8 @@ const config: Config = {
   theme: {
     colors: {
       "red-system": "#C51605",
+      "black-system": "#000",
+      "red-system-200": "#FFAA8D",
       "yellow-system": "#FD8D14",
       "gray-system": "#B0B0B0",
       "dark-gray-system": "#727272"
