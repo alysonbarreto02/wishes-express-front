@@ -32,6 +32,8 @@ export default function Home() {
             control={control}
             name="enterpriseName"
             title="Nome do restaurante *"
+            required="Você deve fornencer o nome da empresa"
+            error={errors.enterpriseName?.message}
           />
           <p className="py-2">Quantos pedidos você tem por dia?</p>
           <div className="flex gap-5">

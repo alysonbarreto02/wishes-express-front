@@ -5,13 +5,15 @@ export function DefaultInput({
   title,
   name,
   control,
-  required
+  required,
+  error
 }: {
   title: string
   name: string
   control: Control<any>
   placeholder?: string
   required?: string
+  error?: string
 }) {
   return (
     <Controller
@@ -20,7 +22,12 @@ export function DefaultInput({
       rules={{ required }}
       render={({ field: { onChange, value } }) => (
         <div className="w-full justify-center flex flex-col">
-          <label htmlFor="nameEnterprise" className="text-xs font-extralight">
+          <label
+            htmlFor="nameEnterprise"
+            className={` ${
+              error && "text-red-system font-medium"
+            } text-xs font-extralight`}
+          >
             {title}
           </label>
           <input
@@ -29,8 +36,11 @@ export function DefaultInput({
             value={value}
             name="nameEnterprise"
             type="text"
-            className="border rounded-md h-9 p-2 border-gray-system w-full"
+            className={`border rounded-md h-9 p-2 ${
+              error ? "border-red-system" : "border-gray-system "
+            } w-full`}
           />
+          {error && <p className="text-xs text-red-system mt-1">{error}</p>}
         </div>
       )}
     />
