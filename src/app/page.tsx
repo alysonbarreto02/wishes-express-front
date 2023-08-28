@@ -8,8 +8,8 @@ import {
   useOutlineButton,
   DefaultButton
 } from "@/components"
-import { tabsRegister } from "@/constants/tabsRegister"
-import { RegisterRestaurantForm } from "@/types/RegisterRestaurantForm"
+import { tabsRegister } from "src/constants/tabsRegister"
+import { RegisterRestaurantForm } from "src/types/RegisterRestaurantForm"
 
 import { useForm } from "react-hook-form"
 
