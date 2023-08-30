@@ -1,5 +1,6 @@
 "use client"
 import Image from "next/image"
+import axios from "axios"
 
 import Logo from "assets/images/Logo.svg"
 import {
@@ -12,10 +13,12 @@ import { tabsRegister } from "src/constants/tabsRegister"
 import { RegisterRestaurantForm } from "src/types/RegisterRestaurantForm"
 
 import { useForm } from "react-hook-form"
+import { useEffect } from "react"
 
 export default function Home() {
   const {
     control,
+    watch,
     handleSubmit,
     formState: { errors }
   } = useForm<RegisterRestaurantForm>()
@@ -24,6 +27,25 @@ export default function Home() {
   function onSubmit(data: RegisterRestaurantForm) {
     console.log(data)
   }
+
+  async function getAddress() {
+    const cep = watch("cep")
+    try {
+      const { data: address } = await axios.get(
+        `https://viacep.com.br/ws/${cep}/json/`
+      )
+      return address
+    } catch (error) {
+      console.error("Error fetching address:", error)
+      return null
+    }
+  }
+
+  useEffect(() => {
+    getAddress().then(address => {
+      console.log("Address:", address)
+    })
+  }, [watch("cep")])
 
   return (
     <main className="w-full h-screen flex">
