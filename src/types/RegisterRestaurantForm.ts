@@ -4,4 +4,10 @@ export interface RegisterRestaurantForm {
   entireName: string
   phone: string
   email: string
+  road: string
+  neighborhood: string
+  number: string
+  city: string
+  state: string
+  complement: string
 }

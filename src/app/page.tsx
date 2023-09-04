@@ -1,6 +1,7 @@
 "use client"
 import Image from "next/image"
 import axios from "axios"
+import { useDebounce } from "use-debounce"
 
 import Logo from "assets/images/Logo.svg"
 import {
@@ -11,41 +12,52 @@ import {
 } from "@/components"
 import { tabsRegister } from "src/constants/tabsRegister"
 import { RegisterRestaurantForm } from "src/types/RegisterRestaurantForm"
+import { AddressType } from "@/types/AddressType"
 
 import { useForm } from "react-hook-form"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 
 export default function Home() {
   const {
     control,
     watch,
     handleSubmit,
-    formState: { errors }
+    formState: { errors },
+    setValue
   } = useForm<RegisterRestaurantForm>()
   const { OutlineButton } = useOutlineButton()
+  const [value] = useDebounce(watch("cep"), 1000)
+  const [address, setAddress] = useState<AddressType>()
 
   function onSubmit(data: RegisterRestaurantForm) {
     console.log(data)
   }
 
   async function getAddress() {
-    const cep = watch("cep")
+    const cep = value
     try {
-      const { data: address } = await axios.get(
-        `https://viacep.com.br/ws/${cep}/json/`
-      )
-      return address
+      if (cep) {
+        const { data }: { data: AddressType } = await axios.get(
+          `https://viacep.com.br/ws/${cep}/json/`
+        )
+        setAddress(data)
+      }
     } catch (error) {
       console.error("Error fetching address:", error)
-      return null
     }
   }
 
   useEffect(() => {
-    getAddress().then(address => {
-      console.log("Address:", address)
-    })
-  }, [watch("cep")])
+    address &&
+      (setValue("city", address?.localidade),
+      setValue("neighborhood", address?.bairro),
+      setValue("state", address?.uf),
+      setValue("road", address?.logradouro))
+  }, [address])
+
+  useEffect(() => {
+    getAddress()
+  }, [value])
 
   return (
     <main className="w-full h-screen flex">
@@ -75,15 +87,62 @@ export default function Home() {
             />
           </div>
           <p className="py-2">Qual o endereço do seu estabelecimento?</p>
-          <DefaultInput
-            control={control}
-            name="cep"
-            title="CEP"
-            required="Forneça o seu CEP"
-            error={errors.cep?.message}
-          />
+          <div className="pb-5">
+            <DefaultInput
+              control={control}
+              name="cep"
+              title="CEP"
+              required="Forneça o seu CEP"
+              error={errors.cep?.message}
+            />
+          </div>
+          {address && (
+            <div className="flex flex-col gap-5">
+              <DefaultInput
+                control={control}
+                name="road"
+                title="Rua"
+                required="Forneça a rua do seu estabelecimento"
+                error={errors.cep?.message}
+              />
+              <DefaultInput
+                control={control}
+                name="number"
+                title="Número"
+                required="Forneça o número do seu estabelecimento"
+                error={errors.cep?.message}
+              />
+              <DefaultInput
+                control={control}
+                name="neighborhood"
+                title="Bairro"
+                required="Forneça o bairro do seu estabelecimento"
+                error={errors.cep?.message}
+              />
+              <DefaultInput
+                control={control}
+                name="city"
+                title="Cidade"
+                required="Forneça a cidade do seu estabelecimento"
+                error={errors.cep?.message}
+              />
+              <DefaultInput
+                control={control}
+                name="state"
+                title="Estado"
+                required="Forneça o estado do seu estabelecimento"
+                error={errors.cep?.message}
+              />
+              <DefaultInput
+                control={control}
+                name="complement"
+                title="Complemento"
+                error={errors.cep?.message}
+              />
+            </div>
+          )}
           <p className="mt-2">Fale um pouco sobre você</p>
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-5">
             <DefaultInput
               control={control}
               name="entireName"
