@@ -1,23 +1,14 @@
 "use client"
-import Image from "next/image"
 import axios from "axios"
+import { useEffect, useState } from "react"
+import { useForm } from "react-hook-form"
 import { useDebounce } from "use-debounce"
 
-import Logo from "assets/images/Logo.svg"
-import {
-  Tabs,
-  DefaultInput,
-  useOutlineButton,
-  DefaultButton
-} from "@/components"
-import { tabsRegister } from "src/constants/tabsRegister"
-import { RegisterRestaurantForm } from "src/types/RegisterRestaurantForm"
+import { DefaultInput, DefaultButton, useOutlineButton } from "@/components"
 import { AddressType } from "@/types/AddressType"
+import { RegisterRestaurantForm } from "@/types/RegisterRestaurantForm"
 
-import { useForm } from "react-hook-form"
-import { useEffect, useState } from "react"
-
-export default function Home() {
+export function Form() {
   const {
     control,
     watch,
@@ -28,9 +19,25 @@ export default function Home() {
   const { OutlineButton } = useOutlineButton()
   const [value] = useDebounce(watch("cep"), 1000)
   const [address, setAddress] = useState<AddressType>()
+  const [tab, setTab] = useState(0)
 
-  function onSubmit(data: RegisterRestaurantForm) {
-    console.log(data)
+  async function onSubmit(data: RegisterRestaurantForm) {
+    // await axios.post("http://localhost:3333/create-restaurant", {
+    //   email: data.email,
+    //   cpfOrCnpj: data.c,
+    //   name: data.enterpriseName,
+    //   ownerName: data.entireName,
+    //   password: data.,
+    //   phone: "23456789",
+    //   wishes: 2,
+    //   CEP: 123457889,
+    //   city: "Natal",
+    //   complement: "Compĺemento",
+    //   neighborhood: " Bairro",
+    //   number: 20,
+    //   road: "Rua odilon braga ",
+    //   UF: "RN"
+    // })
   }
 
   async function getAddress() {
@@ -59,14 +66,12 @@ export default function Home() {
     getAddress()
   }, [value])
 
+  console.log({ tab })
+
   return (
-    <main className="w-full h-screen flex">
-      <div className="w-5/12 h-full flex bg-red-system justify-center items-center ">
-        <Image alt="logo" src={Logo} width={96} height={89} />
-      </div>
-      <div className="w-7/12 h-full px-5 overflow-y-scroll">
-        <Tabs tabs={tabsRegister} />
-        <form className=" px-20 py-1" onSubmit={handleSubmit(onSubmit)}>
+    <form className=" px-20 py-1" onSubmit={handleSubmit(onSubmit)}>
+      {tab === 0 ? (
+        <>
           <p className="py-2">Como podemos chamar seu restaurante?</p>
           <DefaultInput
             control={control}
@@ -166,11 +171,33 @@ export default function Home() {
             />
           </div>
           <div className="flex mt-3 gap-5">
-            <DefaultButton type="submit" title="Confirmar" />
+            <DefaultButton onClick={() => setTab(1)} title="Confirmar" />
             <OutlineButton color="yellow" title="Cancelar" onClick={() => {}} />
           </div>
-        </form>
-      </div>
-    </main>
+        </>
+      ) : (
+        <div className="flex flex-col gap-3">
+          <p className="mt-3">Vamos criar uma senha de acesso ao sistema</p>
+          <DefaultInput
+            control={control}
+            placeholder="Digite uma senha"
+            name="password"
+            title="Criar senha"
+            required="Forneça sua senha de acesso"
+            error={errors.password?.message}
+          />
+          <DefaultInput
+            control={control}
+            placeholder="Digite a senha novamente"
+            name="confirmPassword"
+            title="Repetir senha"
+            error={errors.confirmPassword?.message}
+            required="Repita a senha inserida"
+          />
+          <DefaultButton title="Finalizar cadastro" type="submit" />
+          <DefaultButton title="Cancelar" />
+        </div>
+      )}
+    </form>
   )
 }

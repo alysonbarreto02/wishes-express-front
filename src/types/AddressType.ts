@@ -1,7 +1,7 @@
 export interface AddressType {
   cep: string
   logradouro: string
-  complemento: ""
+  complemento: string
   bairro: string
   localidade: string
   uf: string

@@ -10,4 +10,6 @@ export interface RegisterRestaurantForm {
   city: string
   state: string
   complement: string
+  password: string
+  confirmPassword: string
 }
